@@ -63,9 +63,30 @@
       hexes[randomIndex].classList.add("clicked");
     }
 
-    // Telegram Web App API
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // Розширення WebView на весь екран
+     // Telegram Web App API
+const tg = window.Telegram.WebApp;
+tg.expand(); // Розширення WebView на весь екран
+
+// Функція для купівлі монети Zen
+function buyZen() {
+    tg.showPopup({
+        message: "Ви хочете придбати монету Zen за 10 Telegram Stars?",
+        buttons: [
+            { id: "buy", type: "default", text: "Придбати" },
+            { id: "cancel", type: "destructive", text: "Скасувати" },
+        ],
+    }, (buttonId) => {
+        if (buttonId === "buy") {
+            // Обробка купівлі
+            tg.showAlert("🎉 Монету Zen успішно придбано!");
+            console.log("Покупка підтверджена!");
+        } else {
+            tg.showAlert("❌ Покупку скасовано.");
+        }
+    });
+}
+
   </script>
-</body>
+</body> <button id="buyZen" onclick="buyZen()">💎 Купити Zen (10 Stars)</button>
+
 </html>
