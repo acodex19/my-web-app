@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find BTC Game</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #111;
+      color: #fff;
+    }
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(8, 40px);
+      grid-gap: 5px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .hex {
+      width: 40px;
+      height: 40px;
+      background-color: #ccc;
+      border: 1px solid #000;
+      display: inline-block;
+    }
+    .hex.clicked {
+      background-color: #00FF00;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Find BTC!</h1>
+  <div id="balance">Balance: 4.68 USDT</div>
+  <div class="game-board" id="gameBoard"></div>
+  <button onclick="selectRandomHex()">Random Cluster</button>
+
+  <script>
+    const gameBoard = document.getElementById("gameBoard");
+
+    // Створення сітки з 64 комірок (гексагонів)
+    for (let i = 0; i < 64; i++) {
+      const hex = document.createElement("div");
+      hex.classList.add("hex");
+      hex.addEventListener("click", () => hex.classList.toggle("clicked"));
+      gameBoard.appendChild(hex);
+    }
+
+    function selectRandomHex() {
+      const hexes = document.querySelectorAll(".hex");
+      hexes.forEach((hex) => hex.classList.remove("clicked"));
+      const randomIndex = Math.floor(Math.random() * hexes.length);
+      hexes[randomIndex].classList.add("clicked");
+    }
+
+    // Telegram Web App API
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Розширення WebView на весь екран
+  </script>
+</body>
+</html>
