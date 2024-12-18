@@ -11,7 +11,7 @@
       text-align: center;
       background-color: #1a202c;
       color: #f0f0f0;
-      background-image: url('https://source.unsplash.com/1920x1080/?christmas,snow');
+      background-image: url('https://i.imgur.com/5DQSkuy.png');
       background-size: cover;
       background-attachment: fixed;
     }
@@ -37,10 +37,10 @@
     }
     .hex:hover {
       transform: scale(1.1);
-      background-color: #ffa500;
+      background-color: #ffa500; /* Оранжевий при наведенні */
     }
     .hex.clicked {
-      background-color: #32cd32;
+      background-color: #32cd32; /* Зелений при виборі */
     }
     button {
       margin-top: 20px;
@@ -74,7 +74,7 @@
   <div id="balance">Balance: 4.68 USDT</div>
   <div class="game-board" id="gameBoard"></div>
   <button onclick="selectRandomHex()">🎁 Random Cluster</button>
-  <button id="buyZen">💎 Ти шо клоун (10 Stars)</button>
+  <button id="buyZen" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
 
   <script>
     const gameBoard = document.getElementById("gameBoard");
@@ -94,30 +94,21 @@
       hexes[randomIndex].classList.add("clicked");
     }
 
-    // Telegram Web App API
+    // Ініціалізація Telegram WebApp
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Розширення WebView на весь екран
+    tg.expand();
 
-    // Функція для купівлі через Telegram Stars
-    document.getElementById("buyZen").addEventListener("click", () => {
+    // Функція для оплати через Telegram Stars
+    function buyZen() {
       tg.showInvoice({
         title: "Купівля монети Zen",
-        description: "Придбайте монету Zen за 10 Telegram Stars.",
+        description: "Оплата монети Zen за 10 Telegram Stars.",
         payload: "zen_purchase",
-        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Ваш токен
+        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Тестовий токен
         currency: "XTR", // Telegram Stars
-        prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
-        start_parameter: "purchase_zen",
+        prices: [{ label: "Монета Zen", amount: 1000 }] // 10 Stars = 1000 копійок
       });
-
-      tg.onEvent("invoiceClosed", function (result) {
-        if (result.status === "paid") {
-          alert("🎉 Дякую за оплату! Монета Zen успішно зарахована.");
-        } else {
-          alert("❌ Оплату скасовано.");
-        }
-      });
-    });
+    }
   </script>
 </body>
 </html>
