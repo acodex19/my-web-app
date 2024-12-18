@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zen Stars Payment</title>
+  <title>Zen Payment - Telegram Stars</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
@@ -25,40 +25,29 @@
   </style>
 </head>
 <body>
-  <h1>🎄 Купівля Монети Zen 🎄</h1>
-  <p id="status">Ласкаво просимо до Telegram Stars оплати!</p>
-  <button onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
+  <h1>🌟 Купівля Монети Zen 🌟</h1>
+  <p>Оплата здійснюється через Telegram Stars (XTR)!</p>
+  <button onclick="buyZen()">💎 Купити Zen (10 Stars)</button>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand(); // Розширення WebView на весь екран
 
-    // Перевірка авторизації користувача
-    function checkUser() {
-      if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-        document.getElementById("status").innerText = "❌  не вдалося отримати дані користувача!";
-        return false;
-      }
-      const userName = tg.initDataUnsafe.user.first_name || "Користувач";
-      document.getElementById("status").innerText = `Ласкаво просимо, ${userName}! 🎉`;
-      return true;
-    }
-
-    // Функція для оплати через Telegram Stars
+    // Функція для виклику оплати Telegram Stars
     function buyZen() {
-      if (!checkUser()) {
-        tg.showAlert("🔒 Будь ласка, авторизуйтесь перед оплатою!");
-        return;
+      try {
+        tg.showInvoice({
+          title: "Купівля монети Zen",
+          description: "Придбайте монету Zen за 10 Telegram Stars.",
+          payload: "zen_stars_payment",
+          currency: "XTR", // Валюта Telegram Stars
+          prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
+          start_param: "zen_stars_button"
+        });
+      } catch (error) {
+        console.error("Помилка виклику оплати:", error);
+        tg.showAlert("❌  вдалося відкрити оплату. Перевірте налаштування.");
       }
-
-      tg.showInvoice({
-        title: "Купівля монети Zen",
-        description: "Оплата за монету Zen (10 Telegram Stars).",
-        payload: "zen_purchase_10stars",
-        currency: "XTR", // Telegram Stars
-        prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
-        start_param: "zen_stars_purchase"
-      });
     }
   </script>
 </body>
