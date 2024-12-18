@@ -3,52 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zen Payment - Telegram Stars</title>
+  <title>Telegram Stars Payment</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
       text-align: center;
       background-color: #1e1e2f;
-      color: #f8f9fa;
-      margin: 0; padding: 0;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
     }
-    h1 { color: #ffd700; margin-top: 20px; text-shadow: 2px 2px 4px #000; }
+    h1 { color: #ffd700; }
     button {
-      margin-top: 20px; padding: 15px 25px; font-size: 18px;
-      border: none; border-radius: 10px; background-color: #32cd32;
-      color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
+      margin-top: 20px;
+      padding: 15px 25px;
+      font-size: 18px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
     }
     button:hover { background-color: #228b22; }
-    p { font-size: 16px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>🌟 Купівля Монети Zen 🌟</h1>
-  <p>Оплата здійснюється через Telegram Stars (XTR)!</p>
-  <button onclick="buyZen()">💎 Купити Zen (10 Stars)</button>
+  <button id="payBtn">💎 Купити Zen (10 Stars)</button>
 
   <script>
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Розширення WebView на весь екран
+    tg.expand();
 
-    // Функція для виклику оплати Telegram Stars
-    function buyZen() {
+    document.getElementById("payBtn").addEventListener("click", () => {
       try {
         tg.showInvoice({
           title: "Купівля монети Zen",
-          description: "Придбайте монету Zen за 10 Telegram Stars.",
+          description: "Оплата монети Zen через Telegram Stars.",
           payload: "zen_stars_payment",
-          currency: "XTR", // Валюта Telegram Stars
-          prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
-          start_param: "zen_stars_button"
+          currency: "XTR", // Telegram Stars
+          prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000
+          start_param: "zen_stars"
         });
-      } catch (error) {
-        console.error("Помилка виклику оплати:", error);
-        tg.showAlert("❌  вдалося відкрити оплату. Перевірте налаштування.");
+      } catch (e) {
+        tg.showAlert("❌ Помилка виклику оплати: " + e.message);
       }
-    }
+    });
   </script>
 </body>
 </html>
