@@ -16,7 +16,7 @@
       background-attachment: fixed;
     }
     h1 {
-      color: #ffd700; /* Золотий текст */
+      color: #ffd700;
       text-shadow: 2px 2px 5px #ff4500;
     }
     .game-board {
@@ -37,15 +37,12 @@
     }
     .hex:hover {
       transform: scale(1.1);
-      background-color: #ffa500; /* Оранжевий при наведенні */
-    }
-    .hex.clicked {
-      background-color: #32cd32; /* Зелений при виборі */
+      background-color: #ffa500;
     }
     button {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #ff6347; /* Червоний */
+      background-color: #ff6347;
       color: white;
       border: none;
       border-radius: 5px;
@@ -54,10 +51,10 @@
       transition: background-color 0.3s;
     }
     button:hover {
-      background-color: #ff4500; /* Темніший червоний */
+      background-color: #ff4500;
     }
     #buyZen {
-      background-color: #32cd32; /* Зелений для покупки */
+      background-color: #32cd32;
       color: white;
       border-radius: 20px;
       padding: 15px;
@@ -73,41 +70,30 @@
   <h1>🎄 Find BTC! 🎄</h1>
   <div id="balance">Balance: 4.68 USDT</div>
   <div class="game-board" id="gameBoard"></div>
-  <button onclick="selectRandomHex()">🎁 Random Cluster</button>
   <button id="buyZen" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
 
   <script>
-    const gameBoard = document.getElementById("gameBoard");
-
-    // Створення сітки з 64 комірок (гексагонів)
-    for (let i = 0; i < 64; i++) {
-      const hex = document.createElement("div");
-      hex.classList.add("hex");
-      hex.addEventListener("click", () => hex.classList.toggle("clicked"));
-      gameBoard.appendChild(hex);
-    }
-
-    function selectRandomHex() {
-      const hexes = document.querySelectorAll(".hex");
-      hexes.forEach((hex) => hex.classList.remove("clicked"));
-      const randomIndex = Math.floor(Math.random() * hexes.length);
-      hexes[randomIndex].classList.add("clicked");
-    }
-
-    // Telegram Web App API
     const tg = window.Telegram.WebApp;
     tg.expand(); // Розширення WebView на весь екран
 
-    // Функція для купівлі через Telegram Stars
     function buyZen() {
-      tg.initDataUnsafe;
+      // Ініціалізація запиту на оплату
       tg.showInvoice({
         title: "Купівля монети Zen",
         description: "Придбайте монету Zen за 10 Telegram Stars.",
         payload: "zen_purchase",
-        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73",
+        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Ваш токен
         currency: "XTR", // Telegram Stars
         prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
+        start_parameter: "purchase_zen",
+      });
+
+      tg.onEvent("invoiceClosed", function (result) {
+        if (result.status === "paid") {
+          alert("🎉 Дякую за оплату! Монета Zen успішно зарахована.");
+        } else {
+          alert("❌ Оплату скасовано.");
+        }
       });
     }
   </script>
