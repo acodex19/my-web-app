@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zen Payment</title>
+  <title>Zen Stars Payment</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
@@ -11,63 +11,42 @@
       text-align: center;
       background-color: #1e1e2f;
       color: #f8f9fa;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
     }
-    h1 {
-      color: #ffd700;
-      margin-top: 20px;
-      text-shadow: 2px 2px 4px #000000;
-    }
+    h1 { color: #ffd700; margin-top: 20px; text-shadow: 2px 2px 4px #000; }
     button {
-      margin-top: 20px;
-      padding: 15px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background-color: #32cd32;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      margin-top: 20px; padding: 15px 25px; font-size: 18px;
+      border: none; border-radius: 10px; background-color: #32cd32;
+      color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s ease;
     }
-    button:hover {
-      background-color: #228b22;
-    }
-    p {
-      font-size: 16px;
-      margin-top: 10px;
-    }
+    button:hover { background-color: #228b22; }
+    p { font-size: 16px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>🎄 Купівля Монети Zen 🎄</h1>
-  <p id="status">Будь ласка, авторизуйтесь перед оплатою.</p>
-  <button id="buyZenBtn" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
+  <p id="status">Ласкаво просимо до Telegram Stars оплати!</p>
+  <button onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
 
   <script>
-    // Ініціалізація Telegram Web App API
     const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    let userAuthorized = false;
+    tg.expand(); // Розширення WebView на весь екран
 
     // Перевірка авторизації користувача
-    function checkUserAuthorization() {
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        userAuthorized = true;
-        const userName = tg.initDataUnsafe.user.first_name || "Користувач";
-        document.getElementById("status").innerText = `Ласкаво просимо, ${userName}! 🎉`;
-      } else {
-        document.getElementById("status").innerText = "❌  вдалося отримати дані користувача. Перевірте WebApp.";
+    function checkUser() {
+      if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+        document.getElementById("status").innerText = "❌  не вдалося отримати дані користувача!";
+        return false;
       }
+      const userName = tg.initDataUnsafe.user.first_name || "Користувач";
+      document.getElementById("status").innerText = `Ласкаво просимо, ${userName}! 🎉`;
+      return true;
     }
-
-    checkUserAuthorization();
 
     // Функція для оплати через Telegram Stars
     function buyZen() {
-      if (!userAuthorized) {
+      if (!checkUser()) {
         tg.showAlert("🔒 Будь ласка, авторизуйтесь перед оплатою!");
         return;
       }
@@ -76,14 +55,10 @@
         title: "Купівля монети Zen",
         description: "Оплата за монету Zen (10 Telegram Stars).",
         payload: "zen_purchase_10stars",
-        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Замініть на свій робочий токен
-        currency: "XTR", // Використання Telegram Stars
+        currency: "XTR", // Telegram Stars
         prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
-        start_param: "zen_purchase_2024",
+        start_param: "zen_stars_purchase"
       });
-
-      // Додаткове сповіщення користувачу
-      tg.showAlert("🔔 Оплату відкрито. Перевірте інвойс Telegram!");
     }
   </script>
 </body>
