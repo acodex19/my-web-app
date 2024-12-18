@@ -9,16 +9,17 @@
     body {
       font-family: 'Arial', sans-serif;
       text-align: center;
-      background-color: #1a202c; /* Темний фон */
-      color: #f0f0f0; /* Світлий текст */
+      background-color: #1a202c;
+      color: #f0f0f0;
     }
     h1 {
-      color: #ffd700; /* Золотий текст */
+      color: #ffd700;
+      margin-top: 20px;
     }
     button {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #32cd32; /* Зелений */
+      background-color: #32cd32;
       color: white;
       border: none;
       border-radius: 10px;
@@ -27,7 +28,7 @@
       transition: background-color 0.3s;
     }
     button:hover {
-      background-color: #228b22; /* Темніший зелений */
+      background-color: #228b22;
     }
   </style>
 </head>
@@ -37,32 +38,29 @@
   <button id="buyZen" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // Розширює WebView на весь екран
+    const tg = window.Telegram.WebApp; // Ініціалізація Telegram WebApp API
+    tg.expand(); // Розширення WebView на весь екран
 
-    async function buyZen() {
+    function buyZen() {
       if (!tg.initDataUnsafe) {
-        tg.showAlert("Помилка: Telegram WebApp не ініціалізовано!");
+        tg.showAlert("Telegram WebApp не ініціалізовано! Спробуйте перезавантажити.");
         return;
       }
 
-      // Виклик оплати через Telegram Stars
+      // Виклик функції showInvoice
       tg.showInvoice({
-        title: "Купівля монети Zen",
-        description: "Придбайте монету Zen за 10 Telegram Stars.",
-        payload: "zen_purchase",
-        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Ваш токен
+        title: "Монета Zen",
+        description: "Оплата за монету Zen (10 Stars)",
+        payload: "zen_purchase_10stars",
+        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Ваш тестовий токен
         currency: "XTR", // Telegram Stars
         prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
-        start_param: "zen_stars_purchase"
+        start_param: "zen_stars_button"
       }, (result) => {
-        if (result === 'close') {
-          console.log("Користувач закрив оплату.");
-        } else if (result.successful) {
-          tg.showAlert("🎉 Монету Zen успішно придбано!");
-          console.log("Оплата підтверджена.");
+        if (result.successful) {
+          tg.showAlert("🎉 Оплата успішно пройдена! Дякуємо за покупку!");
         } else {
-          tg.showAlert("❌ Помилка під час оплати.");
+          tg.showAlert("❌ Оплату скасовано або сталася помилка.");
         }
       });
     }
