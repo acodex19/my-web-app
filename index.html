@@ -11,13 +11,15 @@
       text-align: center;
       background-color: #1a202c;
       color: #f0f0f0;
-      background-image: url('https://i.imgur.com/5DQSkuy.png');
+      background-image: url('https://i.imgur.com/Y2XUoHj.jpg'); /* Святковий фон */
       background-size: cover;
       background-attachment: fixed;
+      margin: 0;
     }
     h1 {
       color: #ffd700;
       text-shadow: 2px 2px 5px #ff4500;
+      margin-top: 20px;
     }
     .game-board {
       display: grid;
@@ -37,10 +39,10 @@
     }
     .hex:hover {
       transform: scale(1.1);
-      background-color: #ffa500; /* Оранжевий при наведенні */
+      background-color: #ffa500;
     }
     .hex.clicked {
-      background-color: #32cd32; /* Зелений при виборі */
+      background-color: #32cd32;
     }
     button {
       margin-top: 20px;
@@ -63,6 +65,7 @@
       padding: 15px;
       font-size: 18px;
       box-shadow: 0px 8px 15px rgba(0, 255, 0, 0.3);
+      margin-top: 10px;
     }
     #buyZen:hover {
       background-color: #228b22;
@@ -94,19 +97,26 @@
       hexes[randomIndex].classList.add("clicked");
     }
 
-    // Ініціалізація Telegram WebApp
+    // Telegram Web App API
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    tg.expand(); // Розширення WebView на весь екран
 
     // Функція для оплати через Telegram Stars
     function buyZen() {
-      tg.showInvoice({
-        title: "Купівля монети Zen",
-        description: "Оплата монети Zen за 10 Telegram Stars.",
-        payload: "zen_purchase",
-        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73", // Тестовий токен
-        currency: "XTR", // Telegram Stars
-        prices: [{ label: "Монета Zen", amount: 1000 }] // 10 Stars = 1000 копійок
+      tg.showPopup({
+        title: "🔔 Підтвердження покупки",
+        message: "Ви хочете купити монету Zen за 10 Telegram Stars?",
+        buttons: [
+          { id: "confirm", type: "default", text: "Підтвердити" },
+          { id: "cancel", type: "destructive", text: "Скасувати" }
+        ],
+        callback: (buttonId) => {
+          if (buttonId === "confirm") {
+            tg.openInvoice({
+              slug: "zen_purchase_10stars" // Ідентифікатор рахунку, створений у Telegram Payments
+            });
+          }
+        }
       });
     }
   </script>
