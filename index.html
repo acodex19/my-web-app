@@ -7,10 +7,17 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Comic Sans MS', sans-serif;
       text-align: center;
-      background-color: #111;
-      color: #fff;
+      background-color: #1a202c; /* Темний фон */
+      color: #f0f0f0; /* Світлий текст */
+      background-image: url('https://i.imgur.com/5DQSkuy.png'); /* Новорічна тематика */
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    h1 {
+      color: #ffd700; /* Золотий текст */
+      text-shadow: 2px 2px 5px #ff4500;
     }
     .game-board {
       display: grid;
@@ -22,28 +29,52 @@
     .hex {
       width: 40px;
       height: 40px;
-      background-color: #ccc;
-      border: 1px solid #000;
-      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 2px solid #000;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+    .hex:hover {
+      transform: scale(1.1);
+      background-color: #ffa500; /* Оранжевий при наведенні */
     }
     .hex.clicked {
-      background-color: #00FF00;
+      background-color: #32cd32; /* Зелений при виборі */
     }
     button {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #00bcd4;
+      background-color: #ff6347; /* Червоний */
       color: white;
       border: none;
+      border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #ff4500; /* Темніший червоний */
+    }
+    #buyZen {
+      background-color: #32cd32; /* Зелений для покупки */
+      color: white;
+      border-radius: 20px;
+      padding: 15px;
+      font-size: 18px;
+      box-shadow: 0px 8px 15px rgba(0, 255, 0, 0.3);
+    }
+    #buyZen:hover {
+      background-color: #228b22;
     }
   </style>
 </head>
 <body>
-  <h1>Find BTC!</h1>
+  <h1>🎄 Find BTC! 🎄</h1>
   <div id="balance">Balance: 4.68 USDT</div>
   <div class="game-board" id="gameBoard"></div>
-  <button onclick="selectRandomHex()">Random Cluster</button>
+  <button onclick="selectRandomHex()">🎁 Random Cluster</button>
+  <button id="buyZen" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
 
   <script>
     const gameBoard = document.getElementById("gameBoard");
@@ -63,30 +94,22 @@
       hexes[randomIndex].classList.add("clicked");
     }
 
-     // Telegram Web App API
-const tg = window.Telegram.WebApp;
-tg.expand(); // Розширення WebView на весь екран
+    // Telegram Web App API
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Розширення WebView на весь екран
 
-// Функція для купівлі монети Zen
-function buyZen() {
-    tg.showPopup({
-        message: "Ви хочете придбати монету Zen за 10 Telegram Stars?",
-        buttons: [
-            { id: "buy", type: "default", text: "Придбати" },
-            { id: "cancel", type: "destructive", text: "Скасувати" },
-        ],
-    }, (buttonId) => {
-        if (buttonId === "buy") {
-            // Обробка купівліі
-            tg.showAlert("🎉 Монету Zen успішно придбано!");
-            console.log("Покупка підтверджена!");
-        } else {
-            tg.showAlert("❌ Покупку скасовано.");
-        }
-    });
-}
-
+    // Функція для купівлі через Telegram Stars
+    function buyZen() {
+      tg.initDataUnsafe;
+      tg.showInvoice({
+        title: "Купівля монети Zen",
+        description: "Придбайте монету Zen за 10 Telegram Stars.",
+        payload: "zen_purchase",
+        provider_token: "410694247:TEST:9ca79ad5-3afd-4b70-98b0-5a1273029e73",
+        currency: "XTR", // Telegram Stars
+        prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000 копійок
+      });
+    }
   </script>
-</body> <button id="buyZen" onclick="buyZen()">💎 Ти шо клоун (10 Stars)</button>
-
+</body>
 </html>
