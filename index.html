@@ -33,21 +33,38 @@
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
-    document.getElementById("payBtn").addEventListener("click", () => {
+  
+    document.getElementById("payBtn").addEventListener("click", async () => {
+      const chat_id = "650175477"; // Замініть на реальний chat_id
+  
       try {
-        tg.showInvoice({
-          title: "Купівля монети Zen",
-          description: "Оплата монети Zen через Telegram Stars.",
-          payload: "zen_stars_payment",
-          currency: "XTR", // Telegram Stars
-          prices: [{ label: "Монета Zen", amount: 1000 }], // 10 Stars = 1000
-          start_param: "zen_stars"
+        // Запит до сервера на створення інвойсу
+        const response = await fetch("http://localhost:3000/createInvoice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: chat_id })
         });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          // Показати інвойс через Telegram WebApp API
+          tg.showInvoice({
+            title: "Купівля монети Zen",
+            description: "Оплата за монету Zen через Telegram Stars.",
+            payload: "zen_stars_payment",
+            currency: "XTR",
+            prices: [{ label: "Монета Zen", amount: 1000 }],
+            start_param: "zen_stars"
+          });
+        } else {
+          throw new Error(data.message);
+        }
       } catch (e) {
-        tg.showAlert("❌ Помилка виклику оплати: " + e.message);
+        tg.showAlert("❌ Помилка оплати: " + e.message);
       }
     });
   </script>
+  
 </body>
 </html>
